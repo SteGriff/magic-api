@@ -1,24 +1,4 @@
 <?php
-function get_tag_alt_texts($line){
-
-	$value = "";
-	$NEEDLE = "alt=\"";
-	$NEEDLE_LENGTH = 5;
-	$first=true;
-	
-	while (str_in_str($NEEDLE, $line)){
-		// Destroy line up to and including next {alt="}
-		$line = substr($line, strpos($line, $NEEDLE) + $NEEDLE_LENGTH);
-		// Get payload (text up to closing speech mark)
-		$datum = substr($line, 0, strpos($line, "\""));
-		// Concatenate it with space
-		$value .= ($first ? "$datum" : " + $datum");
-		$first=false;
-	}
-	
-	return $value;
-}
-
 function get_line_content($l){
 	//cardtextbox divs represent seperate lines, which we'll represent with underscores
 	$v = str_replace("</div><div class=\"cardtextbox\">", " _ ", $l);

@@ -1,12 +1,6 @@
 <?php
 
 	$CardTable = "mtg_cards";
-		
-	function sqlBool($b, $db){
-		$b = $db->real_escape_string($b);
-		if ($b) return '1';
-		else return '0';
-	}
 
 	function sqlString($s, $db){
 		return trim($db->real_escape_string($s));
