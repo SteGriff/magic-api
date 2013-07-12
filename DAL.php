@@ -28,7 +28,7 @@
 	}
 	
 	function DB_insert_card($name, $mana_cost, $converted_mana_cost, $types, $card_text, $flavor_text, $power_toughness, $expansion, $rarity, $card_number, $artist, $db){
-		$result = $db->query( SQL_create_card($name, $mana_cost, $converted_mana_cost, $types, $card_text, $flavor_text, $power_toughness, $expansion, $rarity, $card_number, $artist) );
+		$result = $db->query( SQL_create_card($name, $mana_cost, $converted_mana_cost, $types, $card_text, $flavor_text, $power_toughness, $expansion, $rarity, $card_number, $artist, $db) );
 		if ($result){
 			$id = $db->insert_id;
 			return $id;
@@ -38,12 +38,26 @@
 			return false;
 		}
 	}
-	function SQL_create_card($name, $mana_cost, $converted_mana_cost, $types, $card_text, $flavor_text, $power_toughness, $expansion, $rarity, $card_number, $artist){
+	function SQL_create_card($name, $mana_cost, $converted_mana_cost, $types, $card_text, $flavor_text, $power_toughness, $expansion, $rarity, $card_number, $artist, $db){
 		
 		global $CardTable;
 		
+		$name = sqlString($name, $db);
+		$mana_cost = sqlString($mana_cost, $db);
+		$converted_mana_cost = sqlString($converted_mana_cost, $db);
+		$types = sqlString($types, $db);
+		$card_text = sqlString($card_text, $db);
+		$flavor_text = sqlString($flavor_text, $db);
+		$power_toughness = sqlString($power_toughness, $db);
+		$expansion = sqlString($expansion, $db);
+		$rarity = sqlString($rarity, $db);
+		$card_number = sqlString($card_number, $db);
+		$artist = sqlString($artist, $db);
+	
+		/*
 		$card_text = addslashes($card_text);
 		$flavor_text = addslashes($flavor_text);
+		*/
 		
 		$SQL = "insert into $CardTable(name, mana_cost, converted_mana_cost, types, card_text, flavor_text, power_toughness, expansion, rarity, card_number, artist)
 				values( '$name', '$mana_cost', '$converted_mana_cost', '$types', '$card_text', '$flavor_text', '$power_toughness', '$expansion', '$rarity', '$card_number', '$artist' );";

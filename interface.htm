@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body{
+	font-family: sans-serif;
+}
+#cardImage {
+	float: right;
+}
+input#name{
+	width: 50%;
+}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script type="text/javascript">
+function getCard(){
+	var cardName = $('#name').val();
+	
+	$status = $('#status');
+	$status.text("Getting " + cardName + "...");
+	$status.show();
+
+	//Request card data from magic-api
+	$.get('http://stegriff.co.uk/host/magic/', { 'name' : cardName }, function(data){
+		var $panel = $('#results');
+		
+		//Remove last card results
+		$panel.children().remove();
+
+		//Print out every returned attribute in a definition list
+		for(d in data){
+			//console.log(d, data[d]);
+			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
+		}
+		getImage(data.expansion, data.card_number);
+		$status.hide();
+	});
+}
+
+function getImage(magicApiExpansionName, cardId){
+	var baseUrl="http://magiccards.info/scans/en/"; // ... /rtr/31.jpg for example
+	var mcInfoExpansion = "";
+	//TODO Add more data here
+	switch (magicApiExpansionName){
+		case "Return to Ravnica":
+			mcInfoExpansion = "rtr";
+			break;
+		case "Gatecrash":
+			mcInfoExpansion = "gtc";
+			break;
+		case "Dragon's Maze":
+			mcInfoExpansion = 'dgm';
+			break;
+	}
+	var url = baseUrl + mcInfoExpansion + "/" + cardId + ".jpg";
+	console.log(url);
+	$("#cardImage").attr("src",url);
+}
+
+</script>
+<title>Magic Card Retriever</title>
+</head>
+<body>
+	
+	<h1>Magic Card Retriever</h1>
+	<img id="cardImage">
+	<h2 id="status"></h2>
+	
+	<form action="#">
+		<label>Card name:<input id="name"></label>
+		<input type="submit" value="Get card" onclick="getCard()">
+	</form>
+
+	
+	<dl id="results"></dl>
+
+	<p><small>Card images only retrieved for RtR, GTC & DGM. Please modify Javascript getImage() to reach more images.</small></p>
+</body>
+</html>
