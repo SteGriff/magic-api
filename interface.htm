@@ -7,9 +7,10 @@ body{
 }
 #cardImage {
 	float: right;
+	max-width: 40%;
 }
 input#name{
-	width: 50%;
+	width: 40%;
 }
 </style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
@@ -43,6 +44,9 @@ function getImage(magicApiExpansionName, cardId){
 	var mcInfoExpansion = "";
 	//TODO Add more data here
 	switch (magicApiExpansionName){
+		case "Magic 2013 Core Set":
+			mcInfoExpansion = 'm14';
+			break;
 		case "Return to Ravnica":
 			mcInfoExpansion = "rtr";
 			break;
@@ -51,6 +55,12 @@ function getImage(magicApiExpansionName, cardId){
 			break;
 		case "Dragon's Maze":
 			mcInfoExpansion = 'dgm';
+			break;
+		case "Magic 2014 Core Set":
+			mcInfoExpansion = 'm14';
+			break;
+		case "Theros":
+			mcInfoExpansion = 'ths';
 			break;
 	}
 	var url = baseUrl + mcInfoExpansion + "/" + cardId + ".jpg";
@@ -63,8 +73,8 @@ function getImage(magicApiExpansionName, cardId){
 </head>
 <body>
 	
-	<h1>Magic Card Retriever</h1>
 	<img id="cardImage">
+	<h1>Magic Card Retriever</h1>
 	<h2 id="status"></h2>
 	
 	<form action="#">
@@ -75,6 +85,6 @@ function getImage(magicApiExpansionName, cardId){
 	
 	<dl id="results"></dl>
 
-	<p><small>Card images only retrieved for RtR, GTC & DGM. Please modify Javascript getImage() to reach more images.</small></p>
+	<p><small>Card images only retrieved for cards in standard. Modify Javascript getImage() to reach more images.</small></p>
 </body>
 </html>

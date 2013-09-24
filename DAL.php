@@ -1,6 +1,6 @@
 <?php
 
-	$CardTable = "mtg_cards";
+	$CardTable = 'mtg_cards';
 
 	function sqlString($s, $db){
 		return trim($db->real_escape_string($s));
@@ -28,7 +28,7 @@
 			return $id;
 		}
 		else {
-			echo " [[ " . $db->error . " ]] ";
+			echo " [[ {$db->error} ]] ";
 			return false;
 		}
 	}
@@ -47,12 +47,7 @@
 		$rarity = sqlString($rarity, $db);
 		$card_number = sqlString($card_number, $db);
 		$artist = sqlString($artist, $db);
-	
-		/*
-		$card_text = addslashes($card_text);
-		$flavor_text = addslashes($flavor_text);
-		*/
-		
+
 		$SQL = "insert into $CardTable(name, mana_cost, converted_mana_cost, types, card_text, flavor_text, power_toughness, expansion, rarity, card_number, artist)
 				values( '$name', '$mana_cost', '$converted_mana_cost', '$types', '$card_text', '$flavor_text', '$power_toughness', '$expansion', '$rarity', '$card_number', '$artist' );";
 		//echo $SQL;

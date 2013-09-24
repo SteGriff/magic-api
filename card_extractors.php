@@ -1,8 +1,8 @@
 <?php
 function get_line_content($l){
 	//cardtextbox divs represent seperate lines, which we'll represent with underscores
-	$v = str_replace('</div><div class=\"cardtextbox\">', ' _ ', $l);
-	
+	$v = str_replace("</div><div class=\"cardtextbox\">", ' _ ', $l);
+
 	//Replace all images of icons with their alt text
 	$v = preg_replace("#\<img[ a-zA-Z0-9/\.\?=&;\"]+alt=\"([\w ]+)\"[ a-zA-Z0-9/\.\?=&;\"]+\>#", '{$1}', $v);
 	
