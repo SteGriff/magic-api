@@ -12,7 +12,37 @@ body{
 input#name{
 	width: 40%;
 }
+
+
+dt {
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+dd {
+    max-width: 40%;
+    text-align: justify;
+	margin-top: 0.1em;
+	padding: 15px 10px;
+	background-color: #dda;
+}
+
 </style>
+<title>Magic Card Retriever</title>
+</head>
+<body>
+	<img id="cardImage">
+	<h1>Magic Card Retriever</h1>
+	<h2 id="status"></h2>
+	
+	<p id="warning">Images can only be retrieved for cards in standard.</p>
+
+	<form action="#">
+		<label>Card name:<input id="name"></label>
+		<input type="submit" value="Get card" onclick="getCard()">
+	</form>
+	
+	<dl id="results"></dl>
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script type="text/javascript">
 function getCard(){
@@ -45,7 +75,7 @@ function getImage(magicApiExpansionName, cardId){
 	//TODO Add more data here
 	switch (magicApiExpansionName){
 		case "Magic 2013 Core Set":
-			mcInfoExpansion = 'm14';
+			mcInfoExpansion = 'm13';
 			break;
 		case "Return to Ravnica":
 			mcInfoExpansion = "rtr";
@@ -62,29 +92,30 @@ function getImage(magicApiExpansionName, cardId){
 		case "Theros":
 			mcInfoExpansion = 'ths';
 			break;
+		default:
+			warningDisplay(true);
+			return;
 	}
 	var url = baseUrl + mcInfoExpansion + "/" + cardId + ".jpg";
-	console.log(url);
+	//console.log(url);
 	$("#cardImage").attr("src",url);
+	warningDisplay(false);
 }
 
-</script>
-<title>Magic Card Retriever</title>
-</head>
-<body>
-	
-	<img id="cardImage">
-	<h1>Magic Card Retriever</h1>
-	<h2 id="status"></h2>
-	
-	<form action="#">
-		<label>Card name:<input id="name"></label>
-		<input type="submit" value="Get card" onclick="getCard()">
-	</form>
+function warningDisplay(on){
+	if (on){
+		$("#cardImage").hide();
+		$("#warning").show();
+	}
+	else{
+		$("#cardImage").show();
+		$("#warning").hide();
+	}
+}
 
-	
-	<dl id="results"></dl>
-
-	<p><small>Card images only retrieved for cards in standard. Modify Javascript getImage() to reach more images.</small></p>
+$(function(){
+	warningDisplay(false);
+});
+</script>	
 </body>
 </html>
