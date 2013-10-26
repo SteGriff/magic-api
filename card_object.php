@@ -22,10 +22,7 @@ class card
 		$this->c[$property] = $value;
 	}
 	function get($property){
-		return $this->c[$property];
-	}
-	function has($property){
-		return isset($this->c[$property]);
+		return isset($this->c[$property]) ? $this->c[$property] : null;
 	}
 	function json(){
 		return json_encode($this->c);

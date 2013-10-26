@@ -8,12 +8,12 @@
 
 	function DB_create_card($card, $db){
 		$name = $card->get('name');
-		$mana_cost = $card->has('mana_cost') ? $card->get('mana_cost') : null;
-		$converted_mana_cost = $card->has('converted_mana_cost') ? $card->get('converted_mana_cost') : null;
+		$mana_cost = $card->get('mana_cost');
+		$converted_mana_cost = $card->get('converted_mana_cost');
 		$types = $card->get('types');
-		$card_text = $card->has('card_text') ? $card->get('card_text') : null;
-		$flavor_text = $card->has('flavor_text') ? $card->get('flavor_text') : null;
-		$power_toughness = $card->has('power_toughness') ? $card->get('power_toughness') : null;
+		$card_text = $card->get('card_text');
+		$flavor_text = $card->get('flavor_text');
+		$power_toughness = $card->get('power_toughness');
 		$expansion = $card->get('expansion');
 		$rarity = $card->get('rarity');
 		$card_number = $card->get('card_number');
