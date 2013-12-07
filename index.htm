@@ -1,59 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style type="text/css">
-body{
-	font-family: sans-serif;
-}
-#cardImage {
-	float: right;
-	max-width: 40%;
-}
-input#name{
-	width: 40%;
-}
-
-
-dt {
-    font-weight: bold;
-    margin-top: 0.5em;
-}
-dd {
-    max-width: 40%;
-    text-align: justify;
-	margin-top: 0.1em;
-	padding: 15px 10px;
-	background-color: #dda;
-}
-
-</style>
-<title>Magic Card Retriever</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--<link rel="shortcut icon" href="/favicon.ico" />-->
+<link rel="stylesheet" href="scry.css">
+<title>Scry - Magic: The Gathering card search</title>
 </head>
 <body>
 	<img id="cardImage">
-	<h1>Magic Card Retriever</h1>
-	<h2 id="status"></h2>
 	
-	<p id="warning">Images can only be retrieved for cards in standard.</p>
+	<article>
+		<h1>Scry</h1>
+		<h2 id="status"></h2>
+		
+		<p id="warning"><em>Images can only be retrieved for cards in standard.</em></p>
 
-	<form action="#">
-		<label>Card name:<input id="name"></label>
-		<input type="submit" value="Get card" onclick="getCard()">
-	</form>
+		<form action="api.php" method="POST">
+			<label>Card name:<input id="name"></label>
+			<input type="submit" value="Get card" >
+		</form>
+		
+		<dl id="results"></dl>
+
+		<p><a href="http://stegriff.co.uk">SteGriff</a></p>
+	</article>
 	
-	<dl id="results"></dl>
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 <script type="text/javascript">
+$(function(){
+	$('#name').focus();
+	showWarning(false);
+	$('form').submit(function(e){
+		e.preventDefault();
+		getCard();
+	});
+});
 function getCard(){
 	var cardName = $('#name').val();
+	getting(true, cardName);
 	
-	$status = $('#status');
-	$status.text("Getting " + cardName + "...");
-	$status.show();
-
 	//Request card data from magic-api
-	$.get('http://stegriff.co.uk/host/magic/', { 'name' : cardName }, function(data){
+	$.get('/api.php', { 'name' : cardName }, function(data){
 		var $panel = $('#results');
 		
 		//Remove last card results
@@ -64,9 +51,21 @@ function getCard(){
 			//console.log(d, data[d]);
 			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
 		}
+		
 		getImage(data.expansion, data.card_number);
-		$status.hide();
+		getting(false);
 	});
+}
+
+function getting(inProgress, cardName){
+	$status = $('#status');	
+	if (inProgress){
+		$status.text("Getting " + cardName + "...");
+		$status.show();
+	}
+	else{
+		$status.hide();
+	}
 }
 
 function getImage(magicApiExpansionName, cardId){
@@ -74,7 +73,7 @@ function getImage(magicApiExpansionName, cardId){
 	var mcInfoExpansion = "";
 	//TODO Add more data here
 	switch (magicApiExpansionName){
-		case "Magic 2013 Core Set":
+		case "Magic 2013 Core S-et":
 			mcInfoExpansion = 'm13';
 			break;
 		case "Return to Ravnica":
@@ -93,29 +92,37 @@ function getImage(magicApiExpansionName, cardId){
 			mcInfoExpansion = 'ths';
 			break;
 		default:
-			warningDisplay(true);
+			showCard(false);
 			return;
 	}
 	var url = baseUrl + mcInfoExpansion + "/" + cardId + ".jpg";
 	//console.log(url);
 	$("#cardImage").attr("src",url);
-	warningDisplay(false);
+	showCard(true);
 }
 
-function warningDisplay(on){
+function showCard(on){
 	if (on){
+		$("#cardImage").show();
+		showWarning(false);
+		$('article').addClass('shrink');
+	}
+	else{
 		$("#cardImage").hide();
+		showWarning(true);
+		$('article').removeClass('shrink');
+	}
+}
+
+function showWarning(on){
+	if (on){
 		$("#warning").show();
 	}
 	else{
-		$("#cardImage").show();
 		$("#warning").hide();
 	}
 }
 
-$(function(){
-	warningDisplay(false);
-});
 </script>	
 </body>
 </html>

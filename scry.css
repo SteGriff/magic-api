@@ -1,0 +1,76 @@
+*{margin:0; padding: 0;}
+body{
+	font-family: Arial, 'Open Sans', sans-serif;
+	background-color: #efefef;
+}
+
+h1,h2, p{
+	color: #777;
+	text-align: center;
+}
+h1{
+    font-size: 200px;
+    margin: 0.3em 0;
+}
+p{
+    font-size: large;
+    margin: 1em 0;
+}
+
+#cardImage {
+	float: right;
+	max-width: 40%;
+}
+form{
+	width: 100%;
+	text-align: center;
+}
+input {
+    font-size: 20px;
+    margin: 0 5px;
+    padding: 5px;
+}
+input#name{
+	width: 40%;
+}
+
+article{
+	width: 100%;
+}
+.shrink{
+	width: 75%;
+}
+.shrink h1{
+	font-size: 100px;
+	margin: 0.2em 0;
+}
+
+dl{
+	width: 90%;
+	margin: 1em auto;
+}
+dt {
+    font-weight: bold;
+    margin-top: 0.5em;
+	color: #222;
+}
+dd {
+    text-align: justify;
+	margin-top: 0.1em;
+	padding: 15px 10px;
+	background-color: #777;
+	color: #fff;
+}
+
+
+/* On smallish widths */
+@media (max-width: 767px){
+	.shrink{
+		width: 99%;
+	}
+	#cardImage{
+		float: none;
+		display: block;
+		margin: 1em auto;
+	}
+}
