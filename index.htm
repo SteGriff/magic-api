@@ -13,7 +13,7 @@
 		<h1>Scry</h1>
 		<h2 id="status"></h2>
 		
-		<p id="warning"><em>Images can only be retrieved for cards in standard.</em></p>
+		<p id="warning"><em>Can't fetch image for that card</em></p>
 
 		<form action="api.php" method="POST">
 			<label>Card name:<input id="name"></label>
@@ -52,7 +52,7 @@ function getCard(){
 			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
 		}
 		
-		getImage(data.expansion, data.card_number);
+		getImage(data.name);
 		getting(false);
 	});
 }
@@ -68,35 +68,10 @@ function getting(inProgress, cardName){
 	}
 }
 
-function getImage(magicApiExpansionName, cardId){
-	var baseUrl="http://magiccards.info/scans/en/"; // ... /rtr/31.jpg for example
-	var mcInfoExpansion = "";
-	//TODO Add more data here
-	switch (magicApiExpansionName){
-		case "Magic 2013 Core S-et":
-			mcInfoExpansion = 'm13';
-			break;
-		case "Return to Ravnica":
-			mcInfoExpansion = "rtr";
-			break;
-		case "Gatecrash":
-			mcInfoExpansion = "gtc";
-			break;
-		case "Dragon's Maze":
-			mcInfoExpansion = 'dgm';
-			break;
-		case "Magic 2014 Core Set":
-			mcInfoExpansion = 'm14';
-			break;
-		case "Theros":
-			mcInfoExpansion = 'ths';
-			break;
-		default:
-			showCard(false);
-			return;
-	}
-	var url = baseUrl + mcInfoExpansion + "/" + cardId + ".jpg";
-	//console.log(url);
+function getImage(cardName){
+	var baseUrl = "http://mtgimage.com/card/";
+	var url = baseUrl + cardName + ".jpg";
+	console.log(url);
 	$("#cardImage").attr("src",url);
 	showCard(true);
 }

@@ -19,7 +19,7 @@ p{
 
 #cardImage {
 	float: right;
-	max-width: 40%;
+	max-width: 30%;
 }
 form{
 	width: 100%;
@@ -38,7 +38,7 @@ article{
 	width: 100%;
 }
 .shrink{
-	width: 75%;
+	width: 70%;
 }
 .shrink h1{
 	font-size: 100px;
@@ -69,6 +69,7 @@ dd {
 		width: 99%;
 	}
 	#cardImage{
+		max-width:40%;
 		float: none;
 		display: block;
 		margin: 1em auto;
