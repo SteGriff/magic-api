@@ -11,12 +11,13 @@
 	
 	<article>
 		<h1>Scry</h1>
+		<p><small>staging</small></p>
 		<h2 id="status"></h2>
 		
 		<p id="warning"><em>Can't fetch image for that card</em></p>
 
 		<form action="api.php" method="POST">
-			<label>Card name:<input id="name"></label>
+			<input id="name" placeholder="Battlewise Hoplite">
 			<input type="submit" value="Get card" >
 		</form>
 		
@@ -40,7 +41,7 @@ function getCard(){
 	getting(true, cardName);
 	
 	//Request card data from magic-api
-	$.get('/api.php', { 'name' : cardName }, function(data){
+	$.get('./api.php', { 'name' : cardName }, function(data){
 		var $panel = $('#results');
 		
 		//Remove last card results
@@ -71,7 +72,6 @@ function getting(inProgress, cardName){
 function getImage(cardName){
 	var baseUrl = "http://mtgimage.com/card/";
 	var url = baseUrl + cardName + ".jpg";
-	console.log(url);
 	$("#cardImage").attr("src",url);
 	showCard(true);
 }
@@ -99,5 +99,6 @@ function showWarning(on){
 }
 
 </script>	
+<script src="js/placeholder.js"></script>
 </body>
 </html>
