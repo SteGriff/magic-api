@@ -1,7 +1,8 @@
 <?php
 
 	$CardTable = 'mtg_cards';
-
+	$MapTable = 'mtg_map';
+	
 	function sqlString($s, $db){
 		return trim($db->real_escape_string($s));
 	}
@@ -55,23 +56,73 @@
 		return $SQL;
 	}
 	
-	function DB_existing_card($name, $db){
-		$result = $db->query( SQL_existing_card($name, $db) );
-		
+	function DB_card_with_id($id, $db){
+		$result = $db->query(SQL_card_with_id($id, $db));
+		return process_card_result($result);
+	}
+	function SQL_card_with_id($id, $db){
+		global $CardTable;
+		return "select * from $CardTable
+				where ID = '$id'";
+	}
+
+	function DB_card_with_name($name, $db){
+		$result = $db->query(SQL_card_with_name($name, $db));
+		return process_card_result($result);
+	}
+	function SQL_card_with_name($name, $db){
+		global $CardTable;
+		$name = sqlString($name, $db);
+		return "select * from $CardTable
+				where name = '$name'";
+	}
+	
+	function process_card_result($result){
 		switch ($result->num_rows){
 			case 0:
-				return null;
+				return false;
 				break;
 			default:
 				$fetchedArray = (array) $result->fetch_object();
-				$card = new card($fetchedArray);
-				return $card;
+				return new card($fetchedArray);
 		}
 	}
-	function SQL_existing_card($name, $db){
-		global $CardTable;
-		$name = sqlString($name, $db);
-		return "Select * from $CardTable
-				Where name = '$name'";
+	
+	function DB_mapped_id($name, $db){
+		$result = $db->query(SQL_mapped_id($name, $db));
+		switch ($result->num_rows){
+			case 0:
+				return false;
+				break;
+			default:
+				$cardArray = (array) $result->fetch_object();
+				return $cardArray['card_id'];
+		}
 	}
-?>
+	function SQL_mapped_id($name, $db){
+		global $MapTable;
+		$name = sqlString($name, $db);
+		$SQL = "select card_id from $MapTable
+				where search = '$name'";
+		//die($SQL);
+		return $SQL;
+	}
+	
+	function DB_add_to_map($search, $id, $db){
+		$result = $db->query(SQL_add_to_map($search, $id, $db));
+		if ($result){
+			return true;
+		}
+		else {
+			echo " [[ {$db->error} ]] ";
+			return false;
+		}
+	}
+	function SQL_add_to_map($search, $id, $db){
+		global $MapTable;
+		$search = sqlString($search, $db);
+		$SQL = "insert into $MapTable values ('$search', $id)";
+		return $SQL;
+	}
+	
+	?>

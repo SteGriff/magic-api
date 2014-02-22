@@ -25,7 +25,11 @@ class card
 		return isset($this->c[$property]) ? $this->c[$property] : null;
 	}
 	function json(){
-		return json_encode($this->c);
+		//Make a copy so we can remove some stuff
+		// (Arrays are assigned by value, not ref, in php)
+		$j = $this->c;
+		unset($j['ID']);
+		return json_encode($j);
 	}
 	
 	function set_error($e){
