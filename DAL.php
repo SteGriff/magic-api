@@ -2,6 +2,7 @@
 
 	$CardTable = 'mtg_cards';
 	$MapTable = 'mtg_map';
+	$db_now = 'utc_timestamp()';
 	
 	function sqlString($s, $db){
 		return trim($db->real_escape_string($s));
@@ -119,9 +120,9 @@
 		}
 	}
 	function SQL_add_to_map($search, $id, $db){
-		global $MapTable;
+		global $MapTable, $db_now;
 		$search = sqlString($search, $db);
-		$SQL = "insert into $MapTable values ('$search', $id)";
+		$SQL = "insert into $MapTable values ('$search', $id, $db_now)";
 		return $SQL;
 	}
 	
