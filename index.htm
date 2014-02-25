@@ -12,8 +12,6 @@
 	<article>
 		<h1>Scry</h1>
 		<h2 id="status"></h2>
-		
-		<p id="warning"><em>Can't fetch image for that card</em></p>
 
 		<form action="api.php" method="POST">
 			<input id="name" placeholder="Battlewise Hoplite">
@@ -29,7 +27,7 @@
 <script type="text/javascript">
 $(function(){
 	$('#name').focus();
-	showWarning(false);
+	showCard(false);
 	$('form').submit(function(e){
 		e.preventDefault();
 		getCard();
@@ -37,40 +35,40 @@ $(function(){
 });
 function getCard(){
 	var cardName = $('#name').val();
-	getting(true, cardName);
+	getting(cardName);
 	
 	//Request card data from magic-api
 	$.get('./api.php', { 'name' : cardName }, function(data){
 		var $panel = $('#results');
 		
-		//Remove last card results
+		//Clear old results
 		$panel.children().remove();
 
-		//Print out every returned attribute in a definition list
-		for(d in data){
-			//console.log(d, data[d]);
-			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
-		}
-		
 		getImage(data.name);
 		getting(false);
+		
+		//Print out returned attributes in definition list
+		for(d in data){
+			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
+			if (d == 'error'){
+				showCard(false);
+			}
+		}
+		
 	});
 }
 
-function getting(inProgress, cardName){
-	$status = $('#status');	
-	if (inProgress){
+function getting(cardName){
+	$status = $('#status');
+	$status.hide();
+	if (cardName){
 		$status.text("Getting " + cardName + "...");
 		$status.show();
-	}
-	else{
-		$status.hide();
 	}
 }
 
 function getImage(cardName){
-	var baseUrl = "http://mtgimage.com/card/";
-	var url = baseUrl + cardName + ".jpg";
+	var url = "http://mtgimage.com/card/" + cardName + ".jpg";
 	$("#cardImage").attr("src",url);
 	showCard(true);
 }
@@ -78,25 +76,13 @@ function getImage(cardName){
 function showCard(on){
 	if (on){
 		$("#cardImage").show();
-		showWarning(false);
 		$('article').addClass('shrink');
 	}
 	else{
 		$("#cardImage").hide();
-		showWarning(true);
 		$('article').removeClass('shrink');
 	}
 }
-
-function showWarning(on){
-	if (on){
-		$("#warning").show();
-	}
-	else{
-		$("#warning").hide();
-	}
-}
-
 </script>	
 <script src="js/placeholder.js"></script>
 </body>

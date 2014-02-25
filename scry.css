@@ -12,8 +12,10 @@ h1{
     font-size: 200px;
     margin: 0.3em 0;
 }
+p, input{
+	font-size: large;
+}
 p{
-    font-size: large;
     margin: 1em 0;
 }
 
@@ -22,19 +24,17 @@ p{
 	max-width: 30%;
 }
 form{
-	width: 100%;
 	text-align: center;
 }
 input {
-    font-size: 20px;
-    margin: 0 5px;
+    margin: 0 0 0 5px;
     padding: 5px;
 }
 input#name{
 	width: 40%;
 }
 
-article{
+form, article{
 	width: 100%;
 }
 .shrink{
@@ -73,5 +73,12 @@ dd {
 		float: none;
 		display: block;
 		margin: 1em auto;
+	}
+	h1{
+		font-size: 100px;
+		margin: 0.2em 0;
+	}
+	input#name{
+		width: 60%;
 	}
 }
