@@ -18,6 +18,9 @@ p, input{
 p{
     margin: 1em 0;
 }
+p.credit{
+	font-size: small;
+}
 
 #cardImage {
 	float: right;

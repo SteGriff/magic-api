@@ -1,0 +1,11 @@
+CACHE MANIFEST
+#2014-02-25:v1
+
+CACHE:
+index.htm
+scry.css
+favicon.ico
+js/placeholder.js
+
+NETWORK:
+*
