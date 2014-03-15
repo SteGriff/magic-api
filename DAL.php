@@ -89,6 +89,33 @@
 		}
 	}
 	
+	function DB_maps_like($search, $db){
+		//Reject very short searches
+		if (strlen($search) < 4){ return false; }
+		
+		$result = $db->query(SQL_maps_like($search, $db));
+		switch ($result->num_rows){
+			case 0:
+				return false;
+				break;
+			default:
+				$names = array();
+				while ($name = $result->fetch_object()){
+					$names[] = $name->name;
+				}
+				return $names;
+		}
+	}
+	function SQL_maps_like($search, $db){
+		global $MapTable, $CardTable;
+		$search = sqlString($search, $db);
+		$SQL = "SELECT distinct card.name FROM $MapTable as map
+			join $CardTable as card
+			on map.card_id = card.id
+			where map.search like '%$search%'";
+		return $SQL;
+	}
+	
 	function DB_mapped_id($name, $db){
 		$result = $db->query(SQL_mapped_id($name, $db));
 		switch ($result->num_rows){

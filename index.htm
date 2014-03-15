@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html manifest="scry.appcache">
+<html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="shortcut icon" href="favicon.ico" />
@@ -16,74 +17,20 @@
 		<form action="api.php" method="POST">
 			<input id="name" placeholder="Battlewise Hoplite">
 			<input type="submit" value="Get card" >
+			<ul id="suggestions"></ul>
 		</form>
 		
 		<dl id="results"></dl>
 
-		<p class="credit">Powered by <b><a href="http://github.com/stegriff/magic-api">magic-api</a></b> and <a href="http://stegriff.co.uk">@SteGriff</a></p>
+		<p class="credit">
+			Powered by <b><a href="http://github.com/stegriff/magic-api">magic-api</a></b> (<a href="api.php">view</a>)
+			and <a href="http://stegriff.co.uk">@SteGriff</a>
+		</p>
+		<p class="credit">Tip such <a href="http://dogecoin.com">dogecoin</a>? <code>DUPMGGzzZYr1qihXy7EhYtPjxaevAjvsEc</code></p>
 	</article>
 	
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script type="text/javascript">
-$(function(){
-	$('#name').focus();
-	showCard(false);
-	$('form').submit(function(e){
-		e.preventDefault();
-		getCard();
-	});
-});
-function getCard(){
-	var cardName = $('#name').val();
-	getting(cardName);
-	
-	//Request card data from magic-api
-	$.get('./api.php', { 'name' : cardName }, function(data){
-		var $panel = $('#results');
-		
-		//Clear old results
-		$panel.children().remove();
-
-		getImage(data.name);
-		getting(false);
-		
-		//Print out returned attributes in definition list
-		for(d in data){
-			$panel.append("<dt>" + d + "</dt><dd>" + data[d] + "</dd>");
-			if (d == 'error'){
-				showCard(false);
-			}
-		}
-		
-	});
-}
-
-function getting(cardName){
-	$status = $('#status');
-	$status.hide();
-	if (cardName){
-		$status.text("Getting " + cardName + "...");
-		$status.show();
-	}
-}
-
-function getImage(cardName){
-	var url = "http://mtgimage.com/card/" + cardName + ".jpg";
-	$("#cardImage").attr("src",url);
-	showCard(true);
-}
-
-function showCard(on){
-	if (on){
-		$("#cardImage").show();
-		$('article').addClass('shrink');
-	}
-	else{
-		$("#cardImage").hide();
-		$('article').removeClass('shrink');
-	}
-}
-</script>	
-<script src="js/placeholder.js"></script>
+<script type="text/javascript" src="js/scry.js"></script>
+<script type="text/javascript" src="js/placeholder.js"></script>
 </body>
 </html>

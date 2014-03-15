@@ -48,7 +48,7 @@ form, article{
 	margin: 0.2em 0;
 }
 
-dl{
+dl, ul{
 	width: 90%;
 	margin: 1em auto;
 }
@@ -65,6 +65,14 @@ dd {
 	color: #fff;
 }
 
+ul{ list-style-type: none; }
+li{
+	display: inline-block;
+    background-color: #8df;
+    border: 1px solid #6ce;
+    margin: 3px;
+    padding: 4px;
+}
 
 /* On smallish widths */
 @media (max-width: 767px){

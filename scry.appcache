@@ -1,11 +1,13 @@
 CACHE MANIFEST
-#2014-02-25:v1
+#2014-02-25:init
+#2014-03-15:v3
 
 CACHE:
 index.htm
 scry.css
 favicon.ico
 js/placeholder.js
+#exclude js/scry.js
 
 NETWORK:
 *

@@ -1,15 +1,9 @@
 <?php
-require "string_extensions.php";
 require "card_object.php";
 require "card_extractors.php";
-require "timing.php";
+require "helpers.php";
 require "db.php";
 require "DAL.php";
-
-function caching($status){
-	global $metrics, $card;
-	if ($metrics) { $card->set('caching', $status); }
-}
 
 startTiming();
 

@@ -1,4 +1,5 @@
 <?php
+
 function get_line_content($l){
 	//cardtextbox divs represent seperate lines, which we'll represent with underscores
 	$v = str_replace("</div><div class=\"cardtextbox\">", ' _ ', $l);
@@ -33,7 +34,8 @@ function download_card($name_search){
 	$lines = download_page($url);
 	
 	//Loop through lines of the html until the line contains "</title>"
-	for ($i = 2; strpos($lines[$i], '</title>') === false; $i++){}
+	for ($i = 2; strpos($lines[$i], '</title>') === false; $i++){}	
+	
 	//Now $lines[$i-1] contains the page title.
 	// If the page title has "Card Search" there may be a single matching card,
 	// for example "Forest", or it may be multiple results
@@ -45,14 +47,18 @@ function download_card($name_search){
 	else{
 		//Look for the searchTermDisplay and the number of results in it
 		// (Use the existing instance of $i to save time);
-		for (true; strpos($lines[$i], 'searchTermDisplay">') === false; $i++){}
+
+		for (true; strpos($lines[$i], 'searchTermDisplay"') === false; $i++){}
 		$l = $lines[$i];
 		
 		//Number of results is in brackets on this line, like (7)
-		$openBracket = strpos($l, '(') + 1;
+		$openBracket = strpos($l, '(');
 		if ($openBracket === false){
 			$card->set_error('The card search results look strange. Can not return a card.');
 			return $card;
+		}
+		else{
+			$openBracket += 1;
 		}
 		
 		$numberOfResults = substr($l, $openBracket, strpos($l, ')') - $openBracket);
@@ -98,8 +104,6 @@ function download_page($url){
 
 function add_data_from_lines($card, $lines){
 
-	//var_dump($lines);
-	
 	//The key we found on this iteration, and for which we seek a value on the next
 	$flag = null;
 	//Boolean - is that value entirely HTML?
