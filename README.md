@@ -1,31 +1,39 @@
-# magic-api
-**magic-api** is a Magic: The Gathering card database and API for PHP.
+#magic-api
+**magic-api** is a Magic: The Gathering card database and API for PHP.  
 
-This document is not completely up-to-date, but is reasonably accurate.
+##Overview
+MtG card information is available from the official Gatherer reference, but it doesn't provide an API. **magic-api** requests cards from Gatherer, strips the page down to the card data, and caches it in a MySQL database. If the user's search string is new and unique, that is also cached (in a seperate table known as the 'map'), so we can route future searches directly to the DB entry for a card.
 
-## Abstract
-Popular MTG card references, such as Gatherer, feature human-readable information but do not provide a machine-readable version. **magic-api** requests cards by name from the official Gatherer database, strips the page down to the core data, and caches it in a MySQL database. Once a card is in the SQL database, it provides the cached version whenever that card is requested.
+The **Scry** front-end is also included in this repo. This is the name given to my personal installation, [Scry.me.uk](http://scry.me.uk), which you can freely re-brand and re-publish (preferably using a different service name).
+
+###Try it
+**Scry** is my pet installation of **magic-api**. It has learnt that "Tajic", and "Blade of the legion" both unambiguously refer to 'Tajic, blade of the legion'. Here, you can simulate a user search for "Tajic": [http://scry.me.uk/api.php?metrics=1&name=Tajic](http://scry.me.uk/api.php?metrics=1&name=Tajic)
 
 ##Features
 * Search for cards by name
 * Returns JSON object of card (see API)
-* 2-10 seconds to initially fetch a card, relying on Wizards' Gatherer
-* 0.01 seconds to return a card from database once cached
+* Provides autocomplete for front-end development
+* 2-10 seconds to initially fetch a card from Wizards' Gatherer
+* About 0.01 seconds to return a cached card
 
 ##Setup
-**Requires PHP5 with `allow_url_fopen`**  
-Put your database connection information in `db.php` and install all the files together in a directory. `index.php` links all the files together, so you can see the required files there.
+**Requires PHP5** and a php.ini with `allow_url_fopen`
+Put your database connection information in `db.php` and install all the files together in a directory. `api.php` is the linker; check out the required files in there.  
+
+Run the create scripts from the /sql folder on your MySQL DB.
+If you change the table names from the defaults, alter the table name variables at the top of `DAL.php`. Map records have a datetime -- if you want to use a timezone other than UTC, alter the `$db_now` variable in `DAL.php`
 
 ##API
-For demonstration, my installation of **magic-api** with the **"scry"** frontend can be found at [http://scry.me.uk](http://scry.me.uk).
-If you are building an app using **magic-api** as a server, I recommend hosting your own instance, or getting in touch with me using github@stegriff.co.uk.
 
-###Parameters
-`magic?name=black lotus` or `magic?name="black lotus"` to search for a card.  
-`magic?name=boros recruit&metrics=true` to find out whether that card was from the cache or whether its cache insertion was successful.
+###Input
+**Parameters:** `name`, `metrics`  
+**Example:** `http://scry.me.uk/api.php?name=Forest` or `http://scry.me.uk/api.php?name=Forest&metrics=1`  
+N.b. `metrics` is really lazy... if you specify anything that can be loosely interpreted as `true` then it will activate.
 
-###Returned
-**magic-api** returns a JSON object, with the following possible fields. Fields with no value will not be in the returned object.
+###Output
+A JSON object. I recommend JSONview for Firefox or Chrome to view the returned values from **magic-api**. Fields with no value will not appear in the returned object: 
+
+####Success:
 
 	name,
 	mana_cost,
@@ -39,27 +47,36 @@ If you are building an app using **magic-api** as a server, I recommend hosting 
 	rarity,
 	card_number,
 	artist,
-	from_cache^,
-	into_cache^,
-	request_time,
-	error
+	request_time
 
-^Fields only returned when metrics is turned on in the query string.
+**When metrics is on,** there will be an additional `caching` field which can contain: 'found in map', 'added to map', 'mapping failed', 'added to cache and map', 'cache or map failed'.  
 
-###Card encoding
-####Icons
-Icons are encoded with {Braces}, like mana costs (`{2}{U}`), and the tap icon,
-`{Tap}`. Single coloured mana is shortened to W/U/B/R/G as is standard
-(U is blue). Multi-coloured mana is represented like `{Red or White}`. These values are automatically extracted from the `alt` attribute of any images inside a field on Gatherer, and then mana symbols are shortened. `{Variable Colorless}` is also  shortened, to `{X}`.
+####Error:
 
-####Line breaks
-Lines of card text are ended by an underscore flanked by spaces, for example:
+	error,
+	request_time
 
-	"card_text": "{Tap}: Exile target land card from a graveyard. Add one mana of any color to your mana pool. _ {Black}, {Tap}: Exile target instant or sorcery card from a graveyard. Each opponent loses 2 life. _ {Green}, {Tap}: Exile target creature card from a graveyard"
-####Escaping
-* Single and double quotes appear with a backslash.
-* Carriage returns (`\r`) in flavor text are replaced with a space.
-* The em-dash in creature type is a Unicode character but should be rendered correctly as an em-dash by your JSON parser. I recommend JSONview for Firefox or Chrome to view the returned values from **magic-api**.
+Error text is user-friendly and can be output as-is.
+
+####Encoding
+Anything represented with an icon on Gatherer (such as Mana and Tap/Untap) will be parsed using the original alt-text, and placed in {braces}. Single-coloured mana is shortened to a single letter: W/U/B/R/G (U is blue). The icon 'Variable colorless' is shorted to `{X}` as it appears on cards. Multi-coloured mana is represented like `{Red or White}` and is not shortened. Phyrexian mana comes out like `{Phyrexian Green}`.  
+
+Lines of card text are delimited by an underscore flanked by spaces, for example:
+	
+	"card_text": "Flying _ Lifelink (Damage dealt by this creature also causes you to gain that much life.)"
+	
+You can easily split/explode the strings on '_' to get seperate lines.  
+Quotes are escaped with backslashes:
+	
+	"flavor_text": "\"One day every pillar will be a tree and every hall a glade.\"—Trostani"
+	
+-----
+
+##Support
+People occassionally email me for help and advice on setting up an MtG related website. Feel free to send any queries to github@stegriff.co.uk. If you would like me to host a private **magic-api** node to power your mobile app or something, I can arrange that for £1 per month ($1.70).  
+
+Amaze such magic? so web? wow plz send much dogecoin: `DUPMGGzzZYr1qihXy7EhYtPjxaevAjvsEc`  
 
 -----
+
 Stephen Griffiths - @SteGriff - github@stegriff.co.uk
