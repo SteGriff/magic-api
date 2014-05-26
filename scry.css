@@ -72,6 +72,7 @@ li{
     border: 1px solid #6ce;
     margin: 3px;
     padding: 4px;
+	cursor: pointer;
 }
 
 /* On smallish widths */

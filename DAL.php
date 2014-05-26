@@ -2,7 +2,10 @@
 
 	$CardTable = 'mtg_cards';
 	$MapTable = 'mtg_map';
+	$LogTable = 'mtg_log';
+	
 	$db_now = 'utc_timestamp()';
+	$logging = true;
 	
 	function sqlString($s, $db){
 		return trim($db->real_escape_string($s));
@@ -132,7 +135,6 @@
 		$name = sqlString($name, $db);
 		$SQL = "select card_id from $MapTable
 				where search = '$name'";
-		//die($SQL);
 		return $SQL;
 	}
 	
@@ -153,4 +155,23 @@
 		return $SQL;
 	}
 	
+	function DB_add_to_log($event, $search, $db){
+		global $LogTable, $db_now, $logging;
+		if ($logging){
+			$event = sqlString($event, $db);
+			$search = sqlString($search, $db);
+			$SQL = "insert into $LogTable (event, search, happened) values ('$event', '$search', $db_now)";
+			$result = $db->query($SQL);
+			if ($result){
+				return true;
+			}
+			else {
+				return "Error: {$db->error}";
+			}
+		}
+		else{
+			//If logging is turned off, succeed transparently
+			return true;
+		}
+	}
 	?>
